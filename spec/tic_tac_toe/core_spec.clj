@@ -27,14 +27,18 @@
            (should= "X" (game-state 1))
            (should= "O" (game-state 3))))))
 
-  (xit "takes move until the game is over"
+  (it "takes moves until the game is over"
       (let [moves (atom [1 8 2 5 3])
-            game-over-returns (atom [false false false true])]
+            game-over-returns (atom [false false false false false true])]
         (with-redefs [next-move (fn [& _]
                                   (let [next-move (first @moves)]
                                     (swap! moves rest)
                                     next-move))
-                      game-over? (fn [& _] false)]
+                      game-over? (fn [& _]
+                                  (let [next-val (first @game-over-returns)]
+                                    (swap! game-over-returns rest)
+                                    next-val))]
           (let [game-state (:state (play-game))]
-           (should= "X" (game-state 1))
-           (should= "O" (game-state 3)))))))
+           (should=
+             {1 "X" 8 "O" 2 "X" 5 "O" 3 "X"}
+             game-state))))))
