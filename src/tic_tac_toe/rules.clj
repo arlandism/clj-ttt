@@ -1,4 +1,5 @@
-(ns tic-tac-toe.rules)
+(ns tic-tac-toe.rules
+  (:require [tic-tac-toe.board :refer [rows columns]]))
 
 (def player-one :human)
 
@@ -20,5 +21,12 @@
     player-two
     player-one))
 
+(defn- winner-in-set [set]
+  (or
+    (every? #(= player-one-token %) set)
+    (every? #(= player-two %) set)))
+
 (defn winner [board]
-  "X")
+  (if (winner-in-set (rows board))
+    (first (rows board))
+    (first (columns board))))

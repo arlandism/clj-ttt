@@ -22,3 +22,13 @@
 
 (defn new-board [initial-state]
   (assoc {} :state initial-state))
+
+(defn rows [board]
+  (if (vals (:state board))
+    (for [row (partition board-size (range 1 (+ 1 (* board-size board-size))))
+          :let [row-values (vals (select-keys (:state board) row))]
+          :when (not (nil? row-values))]
+     row-values)
+    (list)))
+
+(defn columns [board])
