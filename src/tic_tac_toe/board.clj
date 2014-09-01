@@ -4,6 +4,9 @@
 
 (def board-size 3)
 
+(defn- end-of-board-range []
+  (+ 1 (* board-size board-size)))
+
 ; could memoize below
 (defn- all-moves []
   (range 1 (+ 1 (* board-size board-size))))
@@ -33,18 +36,18 @@
 
 (defn rows [board]
   (generate-sector
-    (partition board-size (range 1 (+ 1 (* board-size board-size))))
+    (partition board-size (range 1 (end-of-board-range)))
     board))
 
 (defn columns [board]
     (let [column-beginnings (range 1 (+ 1 board-size))]
      (generate-sector
       (map (fn [start]
-             (range start (+ 1 (* board-size board-size)) board-size))
+             (range start (end-of-board-range) board-size))
              column-beginnings)
       board)))
 
 (defn diagonals [board]
-  (let [diagonal-one (range 1 (+ 1 (* board-size board-size)) (+ 1 board-size))
+  (let [diagonal-one (range 1 (end-of-board-range) (+ 1 board-size))
         diagonal-two (range board-size (* board-size board-size) (- board-size 1)) ]
     (generate-sector (list diagonal-one diagonal-two) board)))
