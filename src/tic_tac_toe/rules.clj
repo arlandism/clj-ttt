@@ -1,5 +1,5 @@
 (ns tic-tac-toe.rules
-  (:require [tic-tac-toe.board :refer [rows columns]]))
+  (:require [tic-tac-toe.board :refer [board-size rows columns diagonals]]))
 
 (def player-one :human)
 
@@ -21,14 +21,29 @@
     player-two
     player-one))
 
-(defn- winner-in-set [set]
+(defn winner-in-set
+  ([set]
   (or
     (every? #(= player-one-token %) set)
-    (every? #(= player-two %) set)))
+    (every? #(= player-two-token %) set)))
+  ([set size-restriction]
+    (and
+      (= size-restriction (count set))
+      (winner-in-set set))))
+
+(defn- winner-in-any? [section]
+  (some #(winner-in-set % board-size) section))
+
+(defn- get-winning-token [section]
+  (first
+    (first
+      (filter #(winner-in-set % board-size) section))))
 
 (defn winner [board]
-  (let [rows (flatten (rows board))
-        columns (flatten (columns board))]
-   (if (winner-in-set rows)
-    (first rows)
-    (first columns))))
+  (let [rows (rows board)
+        columns (columns board)
+        diagonals (diagonals board)]
+   (cond
+     (winner-in-any? rows) (get-winning-token rows)
+     (winner-in-any? columns) (get-winning-token columns)
+     (winner-in-any? diagonals) (get-winning-token diagonals))))
