@@ -27,6 +27,8 @@
     (every? #(= player-two %) set)))
 
 (defn winner [board]
-  (if (winner-in-set (rows board))
-    (first (rows board))
-    (first (columns board))))
+  (let [rows (flatten (rows board))
+        columns (flatten (columns board))]
+   (if (winner-in-set rows)
+    (first rows)
+    (first columns))))

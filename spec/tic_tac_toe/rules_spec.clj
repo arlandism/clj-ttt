@@ -15,11 +15,11 @@
 
 (describe "winner"
   (context "row winner"
-    (xit "returns the winning token"
+    (it "returns the winning token"
       (let [board (new-board {1 "X" 2 "X" 3 "X"})]
         (should= "X" (winner board)))))
 
   (context "column winner"
-    (xit "returns the winning token"
+    (it "returns the winning token"
       (let [board (new-board {3 "O" 6 "O" 9 "O"})]
         (should= "O" (winner board))))))
