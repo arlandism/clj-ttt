@@ -24,5 +24,33 @@
     (it "returns the rows of the board with moves on three rows"
       (should=
         (list '("O") '("X") '("O" "X"))
-        (rows (new-board {3 "O" 5 "X" 7 "X" 8 "O"}))))))
+        (rows (new-board {3 "O" 5 "X" 7 "X" 8 "O"})))))
+
+  (context "columns"
+    (it "returns the columns of the board when empty"
+      (should= (list) (columns empty-board)))
+    (it "returns the columns of the board with moves on one row"
+      (should= (list '("O")) (columns (make-move empty-board 1 "O"))))
+    (it "returns the columns of the board with moves on two columns"
+      (should=
+        (list '("O") '("X"))
+        (columns (new-board {1 "O" 2 "X"}))))
+    (it "returns the columns of the board with moves on three columns"
+      (should=
+        (list '("O") '("X") '("X" "O"))
+        (columns (new-board {1 "O" 2 "X" 3 "O" 6 "X"})))))
+
+  (context "diagonals"
+    (it "returns the diagonals of the board when empty"
+      (should= (list) (diagonals empty-board)))
+    (it "returns the diagonals of the board with moves on one diagonal"
+      (should= (list '("O")) (diagonals (make-move empty-board 1 "O"))))
+    (it "returns the diagonals of the board with moves on two diagonals"
+      (should=
+        (list '("O") '("X"))
+        (diagonals (new-board {1 "O" 3 "X"}))))
+    (it "returns the diagonals of the board with moves on three diagonals"
+      (should=
+        (list '("X" "O") '("X" "O"))
+        (diagonals (new-board {1 "O" 5 "X" 3 "O"}))))))
 

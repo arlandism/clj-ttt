@@ -23,12 +23,28 @@
 (defn new-board [initial-state]
   (assoc {} :state initial-state))
 
-(defn rows [board]
-  (if (vals (:state board))
-    (for [row (partition board-size (range 1 (+ 1 (* board-size board-size))))
-          :let [row-values (vals (select-keys (:state board) row))]
-          :when (not (nil? row-values))]
-     row-values)
+(defmacro generate-sector [generator board]
+  `(if (vals (:state ~board))
+    (for [sector# ~generator
+          :let [sector-values# (vals (select-keys (:state ~board) sector#))]
+          :when (not (nil? sector-values#))]
+     sector-values#)
     (list)))
 
-(defn columns [board])
+(defn rows [board]
+  (generate-sector
+    (partition board-size (range 1 (+ 1 (* board-size board-size))))
+    board))
+
+(defn columns [board]
+    (let [column-beginnings (range 1 (+ 1 board-size))]
+     (generate-sector
+      (map (fn [start]
+             (range start (+ 1 (* board-size board-size)) board-size))
+             column-beginnings)
+      board)))
+
+(defn diagonals [board]
+  (let [diagonal-one (range 1 (+ 1 (* board-size board-size)) (+ 1 board-size))
+        diagonal-two (range board-size (* board-size board-size) (- board-size 1)) ]
+    (generate-sector (list diagonal-one diagonal-two) board)))
